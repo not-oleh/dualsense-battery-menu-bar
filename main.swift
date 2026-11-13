@@ -18,7 +18,7 @@ func symbol(_ name: String) -> NSAttributedString {
 func refresh() {
     let s = NSMutableAttributedString(attributedString: symbol("gamecontroller"))
     guard let b = GCController.controllers().compactMap(\.battery).first else {
-        s.append(NSAttributedString(string: " –"))
+        s.append(NSAttributedString(string: "\u{2009}–"))
         item.button?.attributedTitle = s
         return
     }
@@ -26,7 +26,7 @@ func refresh() {
     let charging = b.batteryState == .charging
     let full = b.batteryState == .full
     let bars = [0, 25, 50, 75, 100].min { abs($0 - pct) < abs($1 - pct) }!
-    s.append(NSAttributedString(string: " \(pct)% "))
+    s.append(NSAttributedString(string: "\u{2009}\(pct)%\u{2009}"))
     s.append(symbol(charging || full ? "battery.100.bolt" : "battery.\(bars)"))
     item.button?.attributedTitle = s
     item.button?.toolTip = charging ? "Charging" : full ? "Full" : "On battery"
