@@ -6,7 +6,13 @@ app.setActivationPolicy(.accessory) // menu bar only, no Dock icon
 let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 let menu = NSMenu()
 menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-item.menu = menu
+// Pop the menu manually at the button's bottom edge: item.menu drops it with a gap.
+class Clicker: NSObject {
+    @objc func click(_ b: NSStatusBarButton) { menu.appearance = NSApp.effectiveAppearance; menu.popUp(positioning: nil, at: NSPoint(x: 0, y: 0), in: b) }
+}
+let clicker = Clicker()
+item.button?.target = clicker
+item.button?.action = #selector(Clicker.click(_:))
 GCController.shouldMonitorBackgroundEvents = true
 
 func symbol(_ name: String) -> NSAttributedString {
