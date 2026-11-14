@@ -37,9 +37,10 @@ func refresh() {
         item.button?.attributedTitle = s
         return
     }
-    let pct = Int((b.batteryLevel * 100).rounded())
     let charging = b.batteryState == .charging
     let full = b.batteryState == .full
+    // DualSense reports level in 10% steps as step*10+5, so it tops out at 95% until it flags itself full.
+    let pct = full ? 100 : Int((b.batteryLevel * 100).rounded())
     let bars = [0, 25, 50, 75, 100].min { abs($0 - pct) < abs($1 - pct) }!
     s.append(NSAttributedString(string: "\u{2009}\(pct)%\u{2009}"))
     s.append(symbol(charging || full ? "battery.100.bolt" : "battery.\(bars)"))
